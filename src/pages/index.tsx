@@ -6,9 +6,11 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const hello = api.posts.hello.useQuery({ text: "from tRPC" });
 
   const user = useUser();
+
+  const { data } = api.posts.getAll.useQuery();
 
   return (
     <>
@@ -32,9 +34,14 @@ const Home: NextPage = () => {
               </>
             )}
           </div>
-          <p className="text-2xl text-white">
-            {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-          </p>
+          <div>
+            {data?.map((post) => (
+              <div key={post.id}>
+                <p>{post.authorId}</p>
+                <p>{post.content}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </main>
     </>

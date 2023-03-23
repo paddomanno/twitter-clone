@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export default withClerkMiddleware((req: NextRequest) => {
-  console.log("middleware running");
+  console.log(`middleware running for ${req.method} request to ${req.url}`);
   return NextResponse.next();
 });
 
