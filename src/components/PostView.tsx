@@ -9,7 +9,7 @@ export default function PostView(props: PostWithAuthor) {
   const { post, author } = props;
 
   return (
-    <div className="m-4 flex gap-3 border border-orange-200 p-4">
+    <div className="flex gap-3 border border-orange-200 p-4">
       <Image
         src={author.profileImageUrl}
         alt="Profile image"

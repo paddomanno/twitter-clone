@@ -1,19 +1,35 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
+import LoadingPage from "~/components/LoadingSpinner";
 import PostView from "~/components/PostView";
 
 import { api } from "~/utils/api";
 import CreatePostForm from "../components/CreatePostForm";
 
+const Feed = () => {
+  const { data, isLoading } = api.posts.getAll.useQuery();
+
+  if (isLoading) return <LoadingPage />;
+
+  if (!data) return <div>Failed to load</div>;
+
+  return (
+    <div className="mx-2 flex flex-col gap-2">
+      {data?.map((postWithAuthor) => (
+        <PostView {...postWithAuthor} key={postWithAuthor.post.id} />
+      ))}
+    </div>
+  );
+};
+
 const Home: NextPage = () => {
   const user = useUser();
 
-  const { data, isLoading } = api.posts.getAll.useQuery();
+  // call query to fetch as early as possible
+  api.posts.getAll.useQuery();
 
-  if (isLoading) return <div>Loading...</div>;
-
-  if (!data) return <div>Failed to load</div>;
+  if (!user.isLoaded) return <div />;
 
   return (
     <>
@@ -38,11 +54,7 @@ const Home: NextPage = () => {
             )}
           </div>
           <CreatePostForm />
-          <div>
-            {data?.map((postWithAuthor) => (
-              <PostView {...postWithAuthor} key={postWithAuthor.post.id} />
-            ))}
-          </div>
+          <Feed />
         </div>
       </main>
     </>
