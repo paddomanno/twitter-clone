@@ -1,5 +1,6 @@
 import { type User } from "@clerk/nextjs/dist/api";
 import { clerkClient } from "@clerk/nextjs/server";
+import { type Post } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -12,9 +13,11 @@ import {
 const filterUserForClient = (user: User) => {
   return {
     id: user.id,
-    username: user.username,
+    username: user.username || "unknown", // fallback: user.externalAccounts.find((account) => account.provider === "github")
     fullname:
-      user.firstName && user.lastName && `${user.firstName} ${user.lastName}`,
+      user.firstName && user.lastName && user.lastName.length > 0
+        ? `${user.firstName} ${user.lastName}`
+        : user.firstName,
     profileImageUrl: user.profileImageUrl,
   };
 };
@@ -36,25 +39,7 @@ export const postsRouter = createTRPCRouter({
       },
     });
 
-    const users = (
-      await clerkClient.users.getUserList({
-        userId: posts.map((post) => post.authorId),
-        limit: 100,
-      })
-    ).map(filterUserForClient);
-
-    return posts.map((post) => {
-      const author = users.find((user) => user.id === post.authorId);
-      if (!author)
-        throw new TRPCError({
-          message: "Author not found",
-          code: "INTERNAL_SERVER_ERROR",
-        });
-      return {
-        post,
-        author,
-      };
-    });
+    return addUserDataToPosts(posts);
   }),
 
   // private procedure for creating a post
@@ -77,3 +62,29 @@ export const postsRouter = createTRPCRouter({
       };
     }),
 });
+
+async function addUserDataToPosts(posts: Post[]) {
+  const usersUnfiltered = await clerkClient.users.getUserList({
+    userId: posts.map((post) => post.authorId),
+    limit: 110,
+  });
+  console.log("usersUnfiltered", usersUnfiltered);
+
+  const users = usersUnfiltered.map(filterUserForClient);
+
+  return posts.map((post) => {
+    const author = users.find((user) => user.id === post.authorId);
+    if (!author)
+      throw new TRPCError({
+        message: "Author not found",
+        code: "INTERNAL_SERVER_ERROR",
+      });
+    return {
+      post,
+      author: {
+        ...author,
+        username: author.username,
+      },
+    };
+  });
+}

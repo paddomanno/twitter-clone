@@ -8,8 +8,10 @@ type PostWithAuthor = RouterOutputs["posts"]["getAll"][number];
 export default function PostView(props: PostWithAuthor) {
   const { post, author } = props;
 
+  if (!author.fullname && !author.username) console.log("hier", author);
+
   return (
-    <div className="flex gap-3 border border-orange-200 p-4">
+    <div className="flex gap-3 rounded-xl bg-white/10 p-4">
       <Image
         src={author.profileImageUrl}
         alt="Profile image"
@@ -19,15 +21,7 @@ export default function PostView(props: PostWithAuthor) {
       />
       <div className="flex flex-col">
         <div className="flex">
-          <span className="font-semibold">
-            {!author.fullname && author.username
-              ? `${author.username}`
-              : author.fullname && !author.username
-              ? `${author.fullname}`
-              : author.fullname && author.username
-              ? `${author.fullname} ${author.username}`
-              : "Error loading name"}
-          </span>
+          <span className="font-semibold">{`@${author.username}`}</span>
           <span className="inline-flex items-center justify-center px-2">
             ·
           </span>
