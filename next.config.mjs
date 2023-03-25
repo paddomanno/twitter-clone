@@ -10,6 +10,9 @@ const config = {
   images: {
     domains: ["images.clerk.dev"],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
