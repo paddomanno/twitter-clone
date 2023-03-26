@@ -23,19 +23,24 @@ export default function PostView(props: PostWithAuthor) {
           height={56}
         />
       </Link>
-      <div className="flex flex-col">
+      <div className="flex flex-1 flex-col">
         <div className="flex">
           <Link href={`/@${author.username}`}>
             <span className="font-semibold">{`@${author.username}`}</span>
           </Link>
-          <span className="inline-flex items-center justify-center px-2">
-            ·
-          </span>
-          <span className="font-thin">{`${formatDistanceToNow(
-            post.createdAt
-          )} ago`}</span>
+
+          <Link href={`/post/${post.id}`} className="flex-1">
+            <span className="inline-flex items-center justify-center px-2">
+              ·
+            </span>
+            <span className="font-thin">{`${formatDistanceToNow(
+              post.createdAt
+            )} ago`}</span>
+          </Link>
         </div>
-        <p>{post.content}</p>
+        <Link href={`/post/${post.id}`}>
+          <p>{post.content}</p>
+        </Link>
       </div>
     </div>
   );
