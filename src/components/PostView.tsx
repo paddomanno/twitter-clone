@@ -4,12 +4,13 @@ import Link from "next/link";
 import React from "react";
 import { type RouterOutputs } from "../utils/api";
 
-type PostWithAuthor = RouterOutputs["posts"]["getAll"][number];
+export type PostWithAuthor = RouterOutputs["posts"]["getAll"][number];
 
 export default function PostView(props: PostWithAuthor) {
   const { post, author } = props;
 
-  if (!author.fullname && !author.username) console.log("hier", author);
+  if (!author.fullname && !author.username)
+    console.log("post without author name detected", author);
 
   return (
     <div className="flex gap-3 rounded-xl bg-white/10 p-4">

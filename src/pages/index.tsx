@@ -1,8 +1,10 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import LoadingPage from "~/components/LoadingSpinner";
 import { PageLayout } from "~/components/MyLayout";
+import PostList from "~/components/PostList";
 import PostView from "~/components/PostView";
 
 import { api } from "~/utils/api";
@@ -15,13 +17,7 @@ const Feed = () => {
 
   if (!data) return <div>Failed to load</div>;
 
-  return (
-    <div className="mx-2 flex flex-col gap-2">
-      {data?.map((postWithAuthor) => (
-        <PostView {...postWithAuthor} key={postWithAuthor.post.id} />
-      ))}
-    </div>
-  );
+  return <PostList posts={data} />;
 };
 
 const Home: NextPage = () => {
@@ -30,7 +26,7 @@ const Home: NextPage = () => {
   // call query to fetch as early as possible
   api.posts.getAll.useQuery();
 
-  if (!userLoaded) return <div />;
+  if (!user || !userLoaded) return <div />;
 
   return (
     <PageLayout>
@@ -52,14 +48,20 @@ const Home: NextPage = () => {
                   Sign Out
                 </button>
               </SignOutButton>
-              <span>
-                {`Logged in as 
-                  ${
+              <div className="inline-flex flex-1 flex-row justify-end gap-2">
+                <span>
+                  {`Hey there, ${
                     user.firstName && user.firstName.length > 0
                       ? user.firstName
                       : user.username
-                  }`}
-              </span>
+                  }!`}
+                </span>
+                <Link href={`/@${user.username}`}>
+                  <span className="underline underline-offset-2">
+                    My profile
+                  </span>
+                </Link>
+              </div>
             </>
           )}
         </nav>

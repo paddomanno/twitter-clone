@@ -1,6 +1,10 @@
 import { type GetStaticProps, type NextPage } from "next";
 import Head from "next/head";
 import { appRouter } from "~/server/api/root";
+import Image from "next/image";
+import { PageLayout } from "~/components/MyLayout";
+import PostList from "~/components/PostList";
+import LoadingPage from "~/components/LoadingSpinner";
 
 import { api } from "~/utils/api";
 
@@ -22,18 +26,42 @@ const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout>
-        <div className="pt-4 shadow-inner shadow-black/50">
-          <h1>Profile View</h1>
-          <div>{`@${user.username}`}</div>
+        <div className="relative h-32 bg-indigo-500 pt-4 shadow-inner shadow-black/50">
+          <Image
+            src={user.profileImageUrl}
+            alt="Profile image"
+            className="absolute bottom-0 left-0 -mb-16 ml-8 rounded-full border-indigo-200 bg-indigo-500 outline outline-8 outline-indigo-500"
+            width={128}
+            height={128}
+          />
         </div>
+        <div className="h-16"></div> {/* this is just a spacer */}
+        <div className="mt-2 p-4 text-2xl font-bold">{`@${user.username}`}</div>
+        <ProfileFeed userId={user.id} />
       </PageLayout>
     </>
   );
 };
+
+const ProfileFeed = (props: { userId: string }) => {
+  const {
+    data: posts,
+    isLoading,
+    isError,
+  } = api.posts.getByUserId.useQuery({
+    userId: props.userId,
+  });
+
+  if (isLoading) return <LoadingPage />;
+  if (isError) return <div>Failed to load posts</div>;
+  if (!posts || posts.length === 0) return <div>No posts yet</div>;
+
+  return <PostList posts={posts} />;
+};
+
 import { createProxySSGHelpers } from "@trpc/react-query/ssg";
 import { prisma } from "~/server/db";
 import superjson from "superjson";
-import { PageLayout } from "~/components/MyLayout";
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const ssg = createProxySSGHelpers({
