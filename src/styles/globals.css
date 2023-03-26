@@ -4,4 +4,5 @@
 
 body {
   @apply bg-indigo-900 text-orange-100;
+  overscroll-behavior: none;
 }

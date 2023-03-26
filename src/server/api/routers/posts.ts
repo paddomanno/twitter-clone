@@ -1,4 +1,3 @@
-import { type User } from "@clerk/nextjs/dist/api";
 import { clerkClient } from "@clerk/nextjs/server";
 import { type Post } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
@@ -9,18 +8,7 @@ import {
   privateProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-
-const filterUserForClient = (user: User) => {
-  return {
-    id: user.id,
-    username: user.username || "unknown", // fallback: user.externalAccounts.find((account) => account.provider === "github")
-    fullname:
-      user.firstName && user.lastName && user.lastName.length > 0
-        ? `${user.firstName} ${user.lastName}`
-        : user.firstName,
-    profileImageUrl: user.profileImageUrl,
-  };
-};
+import { filterUserForClient } from "~/server/helpers/filterUser";
 
 export const postsRouter = createTRPCRouter({
   hello: publicProcedure
