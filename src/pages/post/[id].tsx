@@ -1,8 +1,6 @@
-import { GetStaticProps, type NextPage } from "next";
+import { type GetStaticProps, type NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
 import { PageLayout } from "~/components/MyLayout";
-import PostList from "~/components/PostList";
 import LoadingPage from "~/components/LoadingSpinner";
 
 import { api } from "~/utils/api";
