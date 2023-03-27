@@ -13,6 +13,10 @@ const config = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  swcMinify: true,
 
   /**
    * If you have the "experimental: { appDir: true }" setting enabled, then you
