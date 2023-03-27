@@ -1,15 +1,9 @@
-import { type User } from "@clerk/nextjs/dist/api";
 import { clerkClient } from "@clerk/nextjs/server";
-import { type Post } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { filterUserForClient } from "../../helpers/filterUser";
 
-import {
-  createTRPCRouter,
-  privateProcedure,
-  publicProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 export const profileRouter = createTRPCRouter({
   getUserByUsername: publicProcedure

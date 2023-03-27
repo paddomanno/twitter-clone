@@ -1,11 +1,9 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { type NextPage } from "next";
-import Head from "next/head";
 import Link from "next/link";
 import LoadingPage from "~/components/LoadingSpinner";
 import { PageLayout } from "~/components/MyLayout";
 import PostList from "~/components/PostList";
-import PostView from "~/components/PostView";
 
 import { api } from "~/utils/api";
 import CreatePostForm from "../components/CreatePostForm";
@@ -53,10 +51,10 @@ const Home: NextPage = () => {
                   {`Hey there, ${
                     user.firstName && user.firstName.length > 0
                       ? user.firstName
-                      : user.username
+                      : user.username || ""
                   }!`}
                 </span>
-                <Link href={`/@${user.username}`}>
+                <Link href={`/@${user.username || ""}`}>
                   <span className="underline underline-offset-2">
                     My profile
                   </span>
