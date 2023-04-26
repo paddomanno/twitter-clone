@@ -1,3 +1,5 @@
+### Credits to Theo for this great [tutorial](https://www.youtube.com/watch?v=YkOSUVzOAA4)
+
 ## TODO
 
 - use react hook form to handle input state
