@@ -1,6 +1,9 @@
 ## TODO
 
 - use react hook form to handle input state
+- add infinite query / pagination instead of hardcoded 100 posts
+- model User in db schema to synchronize with Clerk, not have to call Clerk's services
+- embed support with Vercel OG image generation
 
 # Create T3 App
 

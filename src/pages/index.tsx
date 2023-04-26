@@ -24,7 +24,7 @@ const Home: NextPage = () => {
   // call query to fetch as early as possible
   api.posts.getAll.useQuery();
 
-  if (!user || !userLoaded) return <div />;
+  // if (!user || !userLoaded) return <div />; // TODO: FIX THIS
 
   return (
     <PageLayout>
